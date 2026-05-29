@@ -1,0 +1,16 @@
+name: Grab and Upload to Pixeldrain
+on:
+  workflow_dispatch:
+jobs:
+  grab_and_upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload to PixelDrain
+        run: |
+          git config --global user.name "nobody"
+          git config --global user.email "nobody@noreply.net"
+          wget https://github.com/jkawamoto/go-pixeldrain/releases/download/v0.8.0/pd_0.8.0_linux_amd64.tar.gz; tar -xvf *.tar.gz; chmod +x ./pd
+          git clone --single-branch -b deprecated/android-4.19-stable https://github.com/rsuntk/tmp_exynos850.git
+          tar -czvf tmp_exynos850.tar.gz ./tmp_exynos850
+          export PIXELDRAIN_API_KEY=${{ secrets.PD_TOKEN }}
+          ./pd upload tmp_exynos850.tar.gz
