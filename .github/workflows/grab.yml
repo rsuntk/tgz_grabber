@@ -10,7 +10,13 @@ jobs:
           git config --global user.name "nobody"
           git config --global user.email "nobody@noreply.net"
           wget https://github.com/jkawamoto/go-pixeldrain/releases/download/v0.8.0/pd_0.8.0_linux_amd64.tar.gz; tar -xvf *.tar.gz; chmod +x ./pd
-          git clone --single-branch -b deprecated/android-4.19-stable https://github.com/rsuntk/tmp_exynos850.git
-          tar -czvf tmp_exynos850.tar.gz ./tmp_exynos850
+          git clone --single-branch -b clo-a23 https://github.com/rsuntk-oss/android_kernel_samsung_sm6225.git tmp_sm6225
+          cd tmp_sm6225
+          # Add LOS
+          git remote add LOS-sm8250 https://github.com/LineageOS/android_kernel_qcom_sm8250.git; git fetch LOS-sm8250 lineage-20
+          # Add ACK
+          git remote add ACK https://android.googlesource.com/kernel/common.git; git fetch ACK deprecated/android-4.19-stable
+          cd ..
+          tar -czvf tmp_sm6225.tar.gz ./tmp_sm6225
           export PIXELDRAIN_API_KEY=${{ secrets.PD_TOKEN }}
-          ./pd upload tmp_exynos850.tar.gz
+          ./pd upload tmp_sm6225.tar.gz
