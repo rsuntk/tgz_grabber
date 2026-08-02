@@ -7,14 +7,11 @@ jobs:
     steps:
       - name: Upload to PixelDrain
         run: |
+          TARGET_FOLDER="a12s_dump"
           git config --global user.name "nobody"
           git config --global user.email "nobody@noreply.net"
           wget https://github.com/jkawamoto/go-pixeldrain/releases/download/v0.8.0/pd_0.8.0_linux_amd64.tar.gz; tar -xvf *.tar.gz; chmod +x ./pd
-          git clone --single-branch -b android15-6.6-lts https://github.com/rsuplaygrnd/android_kernel_samsung_a06.git a06
-          cd a06
-          # Add ACK
-          git remote add ACK https://android.googlesource.com/kernel/common.git; git fetch ACK android15-6.6-lts
-          cd ..
-          tar -czvf a06.tar.gz ./a06
+          git clone --depth=1 https://gitlab.com/SavedByLight/android_dump_samsung_a12s_bimary-D $TARGET_FOLDER
+          tar -czvf $TARGET_FOLDER.tar.gz ./$TARGET_FOLDER
           export PIXELDRAIN_API_KEY=${{ secrets.PD_TOKEN }}
-          ./pd upload a06.tar.gz
+          ./pd upload $TARGET_FOLDER.tar.gz
