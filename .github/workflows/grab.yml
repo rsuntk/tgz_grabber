@@ -7,11 +7,14 @@ jobs:
     steps:
       - name: Upload to PixelDrain
         run: |
-          TARGET_FOLDER="a12s_dump"
+          TARGET_FOLDER="a10s-4.9"
+          TARGET_URL="https://github.com/rsuntk/a10s-4.9"
+          TARGET_BRANCH="deprecated/android-4.9-q"
           git config --global user.name "nobody"
           git config --global user.email "nobody@noreply.net"
           wget https://github.com/jkawamoto/go-pixeldrain/releases/download/v0.8.0/pd_0.8.0_linux_amd64.tar.gz; tar -xvf *.tar.gz; chmod +x ./pd
-          git clone --depth=1 https://gitlab.com/SavedByLight/android_dump_samsung_a12s_bimary-D $TARGET_FOLDER
+          git clone $TARGET_URL $TARGET_FOLDER -b $TARGET_BRANCH
+          cd $TARGET_FOLDER; git remote add ack https://android.googlesource.com/kernel/common.git; git fetch ack deprecated/android-4.9-q; cd ..
           tar -czvf $TARGET_FOLDER.tar.gz ./$TARGET_FOLDER
           export PIXELDRAIN_API_KEY=${{ secrets.PD_TOKEN }}
           ./pd upload $TARGET_FOLDER.tar.gz
